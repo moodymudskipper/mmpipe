@@ -40,7 +40,6 @@ its aliases functions.
 
 ## new operators
 
-The figure sizes have been customised so that you can easily put two images side-by-side.
 
 ```{r}
 library(mmpipe)

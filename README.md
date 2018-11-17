@@ -22,8 +22,6 @@ This package proposes new pipe operators, a function to define custom operators 
 new operators
 -------------
 
-The figure sizes have been customised so that you can easily put two images side-by-side.
-
 ``` r
 library(mmpipe)
 #> Warning: changing locked binding for 'is_pipe' in 'magrittr' whilst loading
