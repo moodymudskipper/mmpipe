@@ -4,7 +4,7 @@ usethis::use_git()
 usethis::use_usethis()
 usethis::use_description(
   list(Title = "Pipe operators and related functions",
-       Description = "This package propose 5 new pipe operators, a function to define custom operators easily, and a few helper functions")
+       Description = "This package proposes new pipe operators, a function to define custom operators easily, and a couple helper functions")
 )
 usethis::use_directory("exclude", ignore = TRUE)
 
@@ -34,7 +34,7 @@ usethis::use_version()
 #$ (if it exists), and commits those changes (if package uses Git).
 usethis::use_dev_version() # increments to a development version
 
-shell("git remote add origin https://github.com/moodymudskipper/dotdot.git")
+shell("git remote add origin https://github.com/moodymudskipper/mmpipe.git")
 shell("git push -u origin master")
 
 # in case of strange merge error:

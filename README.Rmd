@@ -21,33 +21,46 @@ Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 This package proposes new pipe operators, a function to define custom operators
 easily, and 2 other pipe friendly functions :
 
-* **%W** : silence **w**arnings
-* **%V** : uses `View()` on the output
-* **%L** : **L**ogs the relevant call to the console
-* **%P** : uses `print()` on the output
-* **%S** : uses `summary()` on the output
-* **%G** : uses `tibble::glimpse` on the output
-* **%D** : **D**ebugs the pipe chain at the relevant step
+* **%W>%** : silence **w**arnings
+* **%V>%** : uses `View()` on the output
+* **%L>%** : **L**ogs the relevant call to the console
+* **%P>%** : uses `print()` on the output
+* **%S>%** : uses `summary()` on the output
+* **%G>%** : uses `tibble::glimpse` on the output
+* **%D>%** : **D**ebugs the pipe chain at the relevant step
 * **add_pipe** : build custom pipe
 * **pif** : conditional steps
 * **pprint** : pipe friendly printing
 
-`magrittr`'s operators are also exported so they can be used without attaching*
-its aliases functions.
+`magrittr`'s operators are also exported so they can be used without attaching
+alias functions.
 
 ## new operators
 
+When we attach `mmpipe` the functions `magrittr:::is_pipe` and 
+`magrittr:::wrap_function` are modified to register our new pipes in the
+package, thus a couple warnings are displayed.
 
 ```{r}
 library(mmpipe)
+```
 
-# silence a warning
+silence a warning:
+
+```{r}
 data.frame(a = c(1,-1)) %W>% transform(a = sqrt(a))
+```
 
-# log steps in the console
+log steps in the console:
+
+```{r}
 iris %L>% {Sys.sleep(1);head(.,2)} %L>% {Sys.sleep(2);.[4:5]}
 
-# use print, summary or glimpse on output
+```
+
+use print, summary or glimpse on output:
+
+```{r}
 iris %P>% head(2) %P>% `[`(4:5)
 
 iris %S>% head(2) %S>% `[`(4:5)
@@ -55,39 +68,81 @@ iris %S>% head(2) %S>% `[`(4:5)
 iris %G>% head(2) %G>% `[`(4:5)
 ```
 
+view steps of chain in the viewer:
+
 ```{r, eval = FALSE}
-# view steps of chain in the viewer
 iris %V>% head(2) %V>% `[`(4:5)
 
-# debug the chain
+```
+
+debug the chain:
+
+```{r}
 iris %>% head(2) %D>% `[`(4:5)
 ```
 
 ## Create your own pipe operators with `add_pipe`
 
-If we wanted to recreate existing operators
+We create an operator by feeding to `add_pipe` its raw name and the modified
+body of the expression a regular pipe call would return. 
+
+the operator is created and *magrittr*'s namespace is modified to make the new 
+operator compatible.
+
+This is not obvious so let's see some examples, if we wanted to recreate 
+existing operators.
+
+Redefining `%P2>%` as `%P>%` twin :
+
+```{r}
+ add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
+ iris %P2>% head(3) %>% head(2)
+```
+
+Redefining `%T2>%` as `%T>%` twin :
 
 ```{r}
  add_pipe(`%T2>%`, call("{", body, quote(.)))
  iris %T2>% {message("side effect")} %>% head(2)
+```
+
+Redefining `%W2>%` as `%W>%` twin :
+
+```{r}
  add_pipe(`%W2>%`, substitute(
      {options(warn = -1); on.exit(options(warn = w)); b},
      list(w = options()$warn, b = body)))
  data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
- add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
- iris %P>% head(3) %>% head(2)
+ 
 ```
+
+See `magrittr:::wrap_function`'s code for a better understanding.
 
 ## easy conditional steps with `pif`
 
+Using functions:
+
 ```{r}
-# using functions
 iris %>% pif(is.data.frame, dim, nrow)
-# using formulas
+```
+
+Using formulas:
+
+```{r}
 iris %>% pif(~is.numeric(Species), ~"numeric :)",~paste(class(Species)[1],":("))
-# using expressions
+
+```
+
+Using raw expressions:
+
+```{r}
 iris %>% pif(nrow(iris) > 2, head(iris,2))
-# careful with expressions
+
+```
+
+Be careful with expressions!
+
+```{r}
 iris %>% pif(TRUE, dim,  warning("this will be evaluated"))
 iris %>% pif(TRUE, dim, ~warning("this won't be evaluated"))
 ```

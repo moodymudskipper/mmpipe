@@ -6,21 +6,23 @@ Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
 This package proposes new pipe operators, a function to define custom operators easily, and 2 other pipe friendly functions :
 
--   **%W** : silence **w**arnings
--   **%V** : uses `View()` on the output
--   **%L** : **L**ogs the relevant call to the console
--   **%P** : uses `print()` on the output
--   **%S** : uses `summary()` on the output
--   **%G** : uses `tibble::glimpse` on the output
--   **%D** : **D**ebugs the pipe chain at the relevant step
+-   **%W&gt;%** : silence **w**arnings
+-   **%V&gt;%** : uses `View()` on the output
+-   **%L&gt;%** : **L**ogs the relevant call to the console
+-   **%P&gt;%** : uses `print()` on the output
+-   **%S&gt;%** : uses `summary()` on the output
+-   **%G&gt;%** : uses `tibble::glimpse` on the output
+-   **%D&gt;%** : **D**ebugs the pipe chain at the relevant step
 -   **add\_pipe** : build custom pipe
 -   **pif** : conditional steps
 -   **pprint** : pipe friendly printing
 
-`magrittr`'s operators are also exported so they can be used without attaching\* its aliases functions.
+`magrittr`'s operators are also exported so they can be used without attaching alias functions.
 
 new operators
 -------------
+
+When we attach `mmpipe` the functions `magrittr:::is_pipe` and `magrittr:::wrap_function` are modified to register our new pipes in the package, thus a couple warnings are displayed.
 
 ``` r
 library(mmpipe)
@@ -28,14 +30,20 @@ library(mmpipe)
 #> 'mmpipe'
 #> Warning: changing locked binding for 'wrap_function' in 'magrittr' whilst
 #> loading 'mmpipe'
+```
 
-# silence a warning
+silence a warning:
+
+``` r
 data.frame(a = c(1,-1)) %W>% transform(a = sqrt(a))
 #>     a
 #> 1   1
 #> 2 NaN
+```
 
-# log steps in the console
+log steps in the console:
+
+``` r
 iris %L>% {Sys.sleep(1);head(.,2)} %L>% {Sys.sleep(2);.[4:5]}
 #> {
 #>     Sys.sleep(1)
@@ -48,8 +56,11 @@ iris %L>% {Sys.sleep(1);head(.,2)} %L>% {Sys.sleep(2);.[4:5]}
 #>   Petal.Width Species
 #> 1         0.2  setosa
 #> 2         0.2  setosa
+```
 
-# use print, summary or glimpse on output
+use print, summary or glimpse on output:
+
+``` r
 iris %P>% head(2) %P>% `[`(4:5)
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 #> 1          5.1         3.5          1.4         0.2  setosa
@@ -100,35 +111,38 @@ iris %G>% head(2) %G>% `[`(4:5)
 #> 2         0.2  setosa
 ```
 
-``` r
-# view steps of chain in the viewer
-iris %V>% head(2) %V>% `[`(4:5)
+view steps of chain in the viewer:
 
-# debug the chain
+``` r
+iris %V>% head(2) %V>% `[`(4:5)
+```
+
+debug the chain:
+
+``` r
 iris %>% head(2) %D>% `[`(4:5)
+#> debugging in: pipe_browse()
+#> debug: .[4:5]
+#> exiting from: pipe_browse()
+#>   Petal.Width Species
+#> 1         0.2  setosa
+#> 2         0.2  setosa
 ```
 
 Create your own pipe operators with `add_pipe`
 ----------------------------------------------
 
-If we wanted to recreate existing operators
+We create an operator by feeding to `add_pipe` its raw name and the modified body of the expression a regular pipe call would return.
+
+the operator is created and *magrittr*'s namespace is modified to make the new operator compatible.
+
+This is not obvious so let's see some examples, if we wanted to recreate existing operators.
+
+Redefining `%P2>%` as `%P>%` twin :
 
 ``` r
- add_pipe(`%T2>%`, call("{", body, quote(.)))
- iris %T2>% {message("side effect")} %>% head(2)
-#> side effect
-#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#> 1          5.1         3.5          1.4         0.2  setosa
-#> 2          4.9         3.0          1.4         0.2  setosa
- add_pipe(`%W2>%`, substitute(
-     {options(warn = -1); on.exit(options(warn = w)); b},
-     list(w = options()$warn, b = body)))
- data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
-#>     a
-#> 1   1
-#> 2 NaN
  add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
- iris %P>% head(3) %>% head(2)
+ iris %P2>% head(3) %>% head(2)
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 #> 1          5.1         3.5          1.4         0.2  setosa
 #> 2          4.9         3.0          1.4         0.2  setosa
@@ -138,22 +152,60 @@ If we wanted to recreate existing operators
 #> 2          4.9         3.0          1.4         0.2  setosa
 ```
 
+Redefining `%T2>%` as `%T>%` twin :
+
+``` r
+ add_pipe(`%T2>%`, call("{", body, quote(.)))
+ iris %T2>% {message("side effect")} %>% head(2)
+#> side effect
+#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#> 1          5.1         3.5          1.4         0.2  setosa
+#> 2          4.9         3.0          1.4         0.2  setosa
+```
+
+Redefining `%W2>%` as `%W>%` twin :
+
+``` r
+ add_pipe(`%W2>%`, substitute(
+     {options(warn = -1); on.exit(options(warn = w)); b},
+     list(w = options()$warn, b = body)))
+ data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
+#>     a
+#> 1   1
+#> 2 NaN
+```
+
+See `magrittr:::wrap_function`'s code for a better understanding.
+
 easy conditional steps with `pif`
 ---------------------------------
 
+Using functions:
+
 ``` r
-# using functions
 iris %>% pif(is.data.frame, dim, nrow)
 #> [1] 150   5
-# using formulas
+```
+
+Using formulas:
+
+``` r
 iris %>% pif(~is.numeric(Species), ~"numeric :)",~paste(class(Species)[1],":("))
 #> [1] "factor :("
-# using expressions
+```
+
+Using raw expressions:
+
+``` r
 iris %>% pif(nrow(iris) > 2, head(iris,2))
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 #> 1          5.1         3.5          1.4         0.2  setosa
 #> 2          4.9         3.0          1.4         0.2  setosa
-# careful with expressions
+```
+
+Be careful with expressions!
+
+``` r
 iris %>% pif(TRUE, dim,  warning("this will be evaluated"))
 #> Warning in pif(., TRUE, dim, warning("this will be evaluated")): this will
 #> be evaluated
