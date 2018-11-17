@@ -3,20 +3,14 @@ usethis::use_gpl3_license(name = usethis:::find_name())
 usethis::use_git()
 usethis::use_usethis()
 usethis::use_description(
-  list(Title = "Tools for formula manipulation",
-       Description = "Extract lhs or rhs, + convenient interpolation using glue_formula")
+  list(Title = "Pipe operators and related functions",
+       Description = "This package propose 5 new pipe operators, a function to define custom operators easily, and a few helper functions")
 )
 usethis::use_directory("exclude", ignore = TRUE)
 
 devtools::use_build_ignore("exclude")
 usethis::use_git_ignore("exclude")
 usethis::use_news_md()
-
-devtools::use_package("dplyr")
-devtools::use_package("purrr")
-devtools::use_package("glue")
-devtools::use_package("rmarkdown")
-usethis::use_pipe()
 
 
 #addin
