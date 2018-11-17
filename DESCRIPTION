@@ -1,9 +1,19 @@
 Package: mmpipe
-Title: What the Package Does (one line, title case)
+Title: pipe operators and related functions
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-Depends: R (>= 3.5.1)
-License: GPL-3
+Authors@R:
+    person(given = "Antoine",
+           family = "Fabri",
+           role = c("aut", "cre"),
+           email = "antoine.fabri@gmail.com")
+Description: This package propose 5 new pipe operators, a
+    function to define custom operators easily, and a few helper
+    functions
+License: GPL3
 Encoding: UTF-8
+Language: en
 LazyData: true
+RoxygenNote: 6.1.0
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

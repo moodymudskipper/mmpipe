@@ -1,17 +1,17 @@
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @export
-magrittr::`%>%`
+`%>%` <- magrittr::`%>%`
 
-#' @importFrom magrittr `%<>%`
+#' @importFrom magrittr %<>%
 #' @export
-magrittr::`%<>%`
+`%<>%` <- magrittr::`%<>%`
 
-#' @importFrom magrittr `%T>%`
+#' @importFrom magrittr %T>%
 #' @export
-magrittr::`%T>%`
+`%T>%` <- magrittr::`%T>%`
 
-#' @importFrom magrittr `%$%`
+#' @importFrom magrittr %$%
 #' @export
-magrittr::`%$%`
+`%$%` <- magrittr::`%$%`
 
 

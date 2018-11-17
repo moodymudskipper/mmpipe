@@ -1,0 +1,97 @@
+---
+title: "mmpipe"
+author: "Antoine Fabri"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## mmpipe
+
+Install with `devtools::install_gh("moodymudskipper/mmpipe")`
+
+This package propose 5 new pipe operators, a function to define custom operators
+easily, and a few helper functions.
+
+`magrittr`'s operators are also exported so they can be used without attaching*
+its aliases functions.
+
+## new operators
+
+The figure sizes have been customised so that you can easily put two images side-by-side.
+
+```{r}
+library(mmpipe)
+
+# silence a warning
+data.frame(a = c(1,-1)) %W>% transform(a=sqrt(a))
+
+# log steps in the console
+iris %L>% {Sys.sleep(1);head(.,2)} %L>% {Sys.sleep(2);.[4:5]}
+
+# use print, summary or glimpse on output
+iris %P>% head(2) %P>% `[`(4:5)
+
+iris %S>% head(2) %S>% `[`(4:5)
+
+iris %G>% head(2) %G>% `[`(4:5)
+```
+
+```{r, eval = FALSE}
+# view steps of chain in the viewer
+iris %V>% head(2) %V>% `[`(4:5)
+
+# debug the chain
+iris %>% head(2) %D>% `[`(4:5)
+```
+
+## Create your own pipe operators with `add_pipe`
+
+If we wanted to recreate existing operators
+
+```{r}
+ add_pipe(`%T2>%`, call("{", body, quote(.)))
+ iris %T2>% {message("side effect")} %>% head(2)
+ add_pipe(`%W2>%`, substitute(
+     {options(warn = -1); on.exit(options(warn = w)); b},
+     list(w = options()$warn, b = body)))
+ data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
+ add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
+ iris %P>% head(3) %>% head(2)
+```
+
+## easy conditional steps with `pif
+
+```{r}
+# using functions
+iris %>% pif(is.data.frame, dim, nrow)
+# using formulas
+iris %>% pif(~is.numeric(Species), ~"numeric :)",~paste(class(Species)[1],":("))
+# using expressions
+iris %>% pif(nrow(iris) > 2, head(iris,2))
+# careful with expressions
+iris %>% pif(TRUE, dim,  warning("this will be evaluated"))
+iris %>% pif(TRUE, dim, ~warning("this won't be evaluated"))
+```
+
+## print info on intermediate steps with `pprint`
+
+```{r}
+iris %>%
+pprint(~"hello")           %>%
+head(2)                    %>%
+transform(Species = NULL)  %>%
+pprint(rowSums,na.rm = TRUE) %>%
+pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
+pprint(dim)
+```
