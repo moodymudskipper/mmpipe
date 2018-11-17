@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
-This package proposes 5 new pipe operators, a function to define custom operators
-easily, and a few helpers :
+This package proposes new pipe operators, a function to define custom operators
+easily, and a couple helper functions :
 
 * **%W** : silence **w**arnings
 * **%V** : uses `**V**iew()` on the output

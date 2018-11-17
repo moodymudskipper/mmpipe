@@ -4,7 +4,18 @@ mmpipe
 
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
-This package propose 5 new pipe operators, a function to define custom operators easily, and a few helper functions.
+This package proposes new pipe operators, a function to define custom operators easily, and a couple helper functions :
+
+-   **%W** : silence **w**arnings
+-   **%V** : uses `**V**iew()` on the output
+-   **%L** : **L**ogs the relevant call to the console
+-   **%P** : uses `**p**rint()` on the output
+-   **%S** : uses `**s**ummerize()` on the output
+-   **%G** : uses `tibble::**g**limpse` on the output
+-   **%D** : **D**ebugs the pipe chain at the relevant step
+-   **add\_pipe** : build custom pipe
+-   **pif** : conditional steps
+-   **pprint** : pipe friendly printing
 
 `magrittr`'s operators are also exported so they can be used without attaching\* its aliases functions.
 
@@ -129,7 +140,7 @@ If we wanted to recreate existing operators
 #> 2          4.9         3.0          1.4         0.2  setosa
 ```
 
-easy conditional steps with \`pif
+easy conditional steps with `pif`
 ---------------------------------
 
 ``` r
