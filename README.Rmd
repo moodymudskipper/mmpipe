@@ -19,14 +19,14 @@ knitr::opts_chunk$set(
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
 This package proposes new pipe operators, a function to define custom operators
-easily, and a couple helper functions :
+easily, and 2 other pipe friendly functions :
 
 * **%W** : silence **w**arnings
-* **%V** : uses `**V**iew()` on the output
+* **%V** : uses `View()` on the output
 * **%L** : **L**ogs the relevant call to the console
-* **%P** : uses `**p**rint()` on the output
-* **%S** : uses `**s**ummerize()` on the output
-* **%G** : uses `tibble::**g**limpse` on the output
+* **%P** : uses `print()` on the output
+* **%S** : uses `summerize()` on the output
+* **%G** : uses `tibble::glimpse` on the output
 * **%D** : **D**ebugs the pipe chain at the relevant step
 * **add_pipe** : build custom pipe
 * **pif** : conditional steps
