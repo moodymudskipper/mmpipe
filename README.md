@@ -10,7 +10,7 @@ This package proposes new pipe operators, a function to define custom operators 
 -   **%V** : uses `View()` on the output
 -   **%L** : **L**ogs the relevant call to the console
 -   **%P** : uses `print()` on the output
--   **%S** : uses `summerize()` on the output
+-   **%S** : uses `summary()` on the output
 -   **%G** : uses `tibble::glimpse` on the output
 -   **%D** : **D**ebugs the pipe chain at the relevant step
 -   **add\_pipe** : build custom pipe

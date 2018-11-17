@@ -8,7 +8,7 @@
 #'   \item{\%V>\%}{uses \code{*V*iew()} on the output}
 #'   \item{\%L>\%}{*L*ogs the relevant call to the console}
 #'   \item{\%P>\%}{uses \code{*p*rint()} on the output}
-#'   \item{\%S>\%}{uses \code{*s*ummerize()} on the output}
+#'   \item{\%S>\%}{uses \code{*s*ummary()} on the output}
 #'   \item{\%G>\%}{uses \code{tibble::*g*limpse} on the output}
 #'   \item{\%D>\%}{*D*ebugs the pipe chain at the relevant step}
 #' }
