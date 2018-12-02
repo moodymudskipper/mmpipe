@@ -9,6 +9,7 @@
 \alias{\%D>\%}
 \alias{\%V>\%}
 \alias{\%L>\%}
+\alias{\%C>\%}
 \title{Pipe operators to enhance magrittr}
 \usage{
 lhs \%W>\% rhs
@@ -24,6 +25,8 @@ lhs \%D>\% rhs
 lhs \%V>\% rhs
 
 lhs \%L>\% rhs
+
+lhs \%C>\% rhs
 }
 \arguments{
 \item{lhs}{A value or the magrittr placeholder.}
@@ -36,13 +39,14 @@ additional side effects.
 }
 \details{
 \describe{
-  \item{\%W>\%}{silence *w*arnings}
-  \item{\%V>\%}{uses \code{*V*iew()} on the output}
-  \item{\%L>\%}{*L*ogs the relevant call to the console}
-  \item{\%P>\%}{uses \code{*p*rint()} on the output}
-  \item{\%S>\%}{uses \code{*s*ummerize()} on the output}
-  \item{\%G>\%}{uses \code{tibble::*g*limpse} on the output}
-  \item{\%D>\%}{*D*ebugs the pipe chain at the relevant step}
+  \item{\%W>\%}{silence warnings}
+  \item{\%V>\%}{uses \code{View()} on the output}
+  \item{\%L>\%}{logs the relevant call to the console}
+  \item{\%P>\%}{uses \code{print()} on the output}
+  \item{\%S>\%}{prints the \code{summary()} off the output}
+  \item{\%G>\%}{uses \code{tibble::glimpse} on the output}
+  \item{\%D>\%}{debugs the pipe chain at the relevant step}
+  \item{\%C>\%}{clocks the relevant step}
 }
 }
 \examples{

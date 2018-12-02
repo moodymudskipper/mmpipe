@@ -21,18 +21,23 @@ knitr::opts_chunk$set(
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
 This package proposes new pipe operators, a function to define custom operators
-easily, and 2 other pipe friendly functions :
+easily, 2 other pipe friendly functions for conditional steps or printing and
+a `-.gg` methods which makes `-` an alias for `%>%` when used on a ggplot
+object.
 
 * **%W>%** : silence **w**arnings
 * **%V>%** : uses `View()` on the output
 * **%L>%** : **L**ogs the relevant call to the console
 * **%P>%** : uses `print()` on the output
-* **%S>%** : uses `summary()` on the output
+* **%S>%** : prints the `summary()` of the output
 * **%G>%** : uses `tibble::glimpse` on the output
 * **%D>%** : **D**ebugs the pipe chain at the relevant step
+* **%C>%** : **C**locks the relevant step
 * **add_pipe** : build custom pipe
 * **pif** : conditional steps
 * **pprint** : pipe friendly printing
+* **-.gg** : Just like `%>%` but the different operator precedence makes it
+sometimes more convenient.
 
 `magrittr`'s operators are also exported so they can be used without attaching
 alias functions.
@@ -57,7 +62,6 @@ log steps in the console:
 
 ```{r}
 iris %L>% {Sys.sleep(1);head(.,2)} %L>% {Sys.sleep(2);.[4:5]}
-
 ```
 
 use print, summary or glimpse on output:
@@ -83,6 +87,13 @@ debug the chain:
 iris %>% head(2) %D>% `[`(4:5)
 ```
 
+time operations:
+
+```{r}
+iris %C>% head(2) %C>% {Sys.sleep(2);.} 
+```
+
+
 ## Create your own pipe operators with `add_pipe`
 
 We create an operator by feeding to `add_pipe` its raw name and the modified
@@ -97,7 +108,7 @@ existing operators.
 Redefining `%P2>%` as `%P>%` twin :
 
 ```{r}
- add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
+ add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n"); .}, list(b = body)))
  iris %P2>% head(3) %>% head(2)
 ```
 
@@ -115,10 +126,19 @@ Redefining `%W2>%` as `%W>%` twin :
      {options(warn = -1); on.exit(options(warn = w)); b},
      list(w = options()$warn, b = body)))
  data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
- 
 ```
 
 See `magrittr:::wrap_function`'s code for a better understanding.
+
+See also functions `rm_pipe` and `list_pipes`.
+
+## spare parenthesis by piping ggplot objects with `-`
+
+```{r}
+library(ggplot2)
+library(plotly,quietly = TRUE, warn.conflicts = FALSE)
+iris %>% ggplot(aes(Sepal.Width)) + geom_density() - ggplotly()
+```
 
 ## easy conditional steps with `pif`
 
@@ -153,10 +173,10 @@ iris %>% pif(TRUE, dim, ~warning("this won't be evaluated"))
 
 ```{r}
 iris %>%
-pprint(~"hello")           %>%
-head(2)                    %>%
-transform(Species = NULL)  %>%
-pprint(rowSums,na.rm = TRUE) %>%
-pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
-pprint(dim)
+  pprint(~"hello")           %>%
+  head(2)                    %>%
+  transform(Species = NULL)  %>%
+  pprint(rowSums,na.rm = TRUE) %>%
+  pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
+  pprint(dim)
 ```

@@ -28,5 +28,5 @@ add_pipe(`\%W2>\%`, substitute(
     list(w = options()$warn, b = body)))
 data.frame(a = c(1,-1)) \%W2>\% transform(a = sqrt(a))
 add_pipe(`\%P2>\%`, substitute({. <- print(b);cat("\\n");.}, list(b = body)))
-iris \%P>\% head(3) \%>\% head(2)
+iris \%P2>\% head(3) \%>\% head(2)
 }

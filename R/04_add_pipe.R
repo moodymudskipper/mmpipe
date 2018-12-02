@@ -17,9 +17,18 @@
 #'     list(w = options()$warn, b = body)))
 #' data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
 #' add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
-#' iris %P>% head(3) %>% head(2)
+#' iris %P2>% head(3) %>% head(2)
 add_pipe <- function(new_pipe, new_body){
+  new_pipe_chr <- as.character(substitute(new_pipe))
+  if (new_pipe_chr %in% protected_pipes)
+    stop("`",new_pipe_chr, "` is a predefined pipe, you can't overwrite it")
+  else if (new_pipe_chr %in% list_pipes()) {
+    message("`",new_pipe_chr, "` will be overwritten")
+    eval(substitute(rm_pipe(new_pipe)))
+  }
+
   new_is_pipe <- magrittr:::is_pipe
+  # body(x)[[2]] is the real body, after the `{` element
   body(new_is_pipe)[[2]] <- substitute(b || identical(pipe, quote(new_pipe)),
                                        list(b = body(new_is_pipe)[[2]],
                                             new_pipe = substitute(new_pipe)))

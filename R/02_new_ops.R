@@ -4,13 +4,14 @@
 #' additional side effects.
 #'
 #' \describe{
-#'   \item{\%W>\%}{silence *w*arnings}
-#'   \item{\%V>\%}{uses \code{*V*iew()} on the output}
-#'   \item{\%L>\%}{*L*ogs the relevant call to the console}
-#'   \item{\%P>\%}{uses \code{*p*rint()} on the output}
-#'   \item{\%S>\%}{uses \code{*s*ummary()} on the output}
-#'   \item{\%G>\%}{uses \code{tibble::*g*limpse} on the output}
-#'   \item{\%D>\%}{*D*ebugs the pipe chain at the relevant step}
+#'   \item{\%W>\%}{silence warnings}
+#'   \item{\%V>\%}{uses \code{View()} on the output}
+#'   \item{\%L>\%}{logs the relevant call to the console}
+#'   \item{\%P>\%}{uses \code{print()} on the output}
+#'   \item{\%S>\%}{prints the \code{summary()} off the output}
+#'   \item{\%G>\%}{uses \code{tibble::glimpse} on the output}
+#'   \item{\%D>\%}{debugs the pipe chain at the relevant step}
+#'   \item{\%C>\%}{clocks the relevant step}
 #' }
 #'
 #' @inheritParams magrittr::`%>%`
@@ -63,3 +64,16 @@ NULL
 #' @rdname pipeops
 #' @export
 `%L>%` <- magrittr::`%>%`
+
+#' @rdname pipeops
+#' @export
+`%C>%` <- magrittr::`%>%`
+
+#' Pipe ggplot objects using `-`
+#'
+#' This is a pure alias for `%>%` but it has a different operator precedence
+#' which makes it convenient when you want to pipe a ggplot chain into a function
+#' without using parenthesis around the call.
+#'
+#' @export
+`-.gg` <- magrittr::`%>%`

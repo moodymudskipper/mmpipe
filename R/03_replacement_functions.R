@@ -1,12 +1,13 @@
 # function defined to replace original magrittr:::is_pipe
-new_is_pipe <- function (pipe)
+new_is_pipe <- function(pipe)
 {
   identical(pipe, quote(`%>%`)) || identical(pipe, quote(`%T>%`)) ||
     identical(pipe, quote(`%<>%`)) || identical(pipe, quote(`%$%`)) ||
     identical(pipe, quote(`%W>%`)) || identical(pipe, quote(`%P>%`)) ||
     identical(pipe, quote(`%V>%`)) || identical(pipe, quote(`%L>%`)) ||
     identical(pipe, quote(`%D>%`)) || identical(pipe, quote(`%S>%`)) ||
-    identical(pipe, quote(`%G>%`))
+    identical(pipe, quote(`%G>%`)) || identical(pipe, quote(`%C>%`)) ||
+    identical(pipe, quote(`-.gg`))
 }
 
 # function defined to replace original magrittr:::wrap_function
@@ -48,5 +49,9 @@ new_wrap_function <- function(body, pipe, env) {
   else if (identical(pipe, quote(`%G>%`))) {
     body <- substitute({. <- b; dplyr::glimpse(.);cat("\n"); .}, list(b = body))
   }
+  else if (identical(pipe, quote(`%C>%`))) {
+    body <- substitute({print(system.time(. <- b));cat("\n"); .}, list(b = body))
+  }
+
   eval(call("function", as.pairlist(alist(. = )), body), env, env)
 }
