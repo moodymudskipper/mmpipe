@@ -4,18 +4,20 @@ mmpipe
 
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
-This package proposes new pipe operators, a function to define custom operators easily, and 2 other pipe friendly functions :
+This package proposes new pipe operators, a function to define custom operators easily, 2 other pipe friendly functions for conditional steps or printing and a `-.gg` methods which makes `-` an alias for `%>%` when used on a ggplot object.
 
 -   **%W&gt;%** : silence **w**arnings
 -   **%V&gt;%** : uses `View()` on the output
 -   **%L&gt;%** : **L**ogs the relevant call to the console
 -   **%P&gt;%** : uses `print()` on the output
--   **%S&gt;%** : uses `summary()` on the output
+-   **%S&gt;%** : prints the `summary()` of the output
 -   **%G&gt;%** : uses `tibble::glimpse` on the output
 -   **%D&gt;%** : **D**ebugs the pipe chain at the relevant step
+-   **%C&gt;%** : **C**locks the relevant step
 -   **add\_pipe** : build custom pipe
 -   **pif** : conditional steps
 -   **pprint** : pipe friendly printing
+-   **-.gg** : Just like `%>%` but the different operator precedence makes it sometimes more convenient.
 
 `magrittr`'s operators are also exported so they can be used without attaching alias functions.
 
@@ -129,6 +131,20 @@ iris %>% head(2) %D>% `[`(4:5)
 #> 2         0.2  setosa
 ```
 
+time operations:
+
+``` r
+iris %C>% head(2) %C>% {Sys.sleep(2);.} 
+#>    user  system elapsed 
+#>       0       0       0 
+#> 
+#>    user  system elapsed 
+#>       0       0       2
+#>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#> 1          5.1         3.5          1.4         0.2  setosa
+#> 2          4.9         3.0          1.4         0.2  setosa
+```
+
 Create your own pipe operators with `add_pipe`
 ----------------------------------------------
 
@@ -141,7 +157,7 @@ This is not obvious so let's see some examples, if we wanted to recreate existin
 Redefining `%P2>%` as `%P>%` twin :
 
 ``` r
- add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
+ add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n"); .}, list(b = body)))
  iris %P2>% head(3) %>% head(2)
 #>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 #> 1          5.1         3.5          1.4         0.2  setosa
@@ -176,6 +192,17 @@ Redefining `%W2>%` as `%W>%` twin :
 ```
 
 See `magrittr:::wrap_function`'s code for a better understanding.
+
+See also functions `rm_pipe` and `list_pipes`.
+
+spare parenthesis by piping ggplot objects with `-`
+---------------------------------------------------
+
+``` r
+library(ggplot2)
+library(plotly,quietly = TRUE, warn.conflicts = FALSE)
+iris %>% ggplot(aes(Sepal.Width)) + geom_density() - ggplotly()
+```
 
 easy conditional steps with `pif`
 ---------------------------------
@@ -219,12 +246,12 @@ print info on intermediate steps with `pprint`
 
 ``` r
 iris %>%
-pprint(~"hello")           %>%
-head(2)                    %>%
-transform(Species = NULL)  %>%
-pprint(rowSums,na.rm = TRUE) %>%
-pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
-pprint(dim)
+  pprint(~"hello")           %>%
+  head(2)                    %>%
+  transform(Species = NULL)  %>%
+  pprint(rowSums,na.rm = TRUE) %>%
+  pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
+  pprint(dim)
 #> [1] "hello"
 #>    1    2 
 #> 10.2  9.5 

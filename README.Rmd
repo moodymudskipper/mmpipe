@@ -132,7 +132,7 @@ See also functions `rm_pipe` and `list_pipes`.
 
 ## spare parenthesis by piping ggplot objects with `-`
 
-```{r}
+```{r, eval =FALSE}
 library(ggplot2)
 library(plotly,quietly = TRUE, warn.conflicts = FALSE)
 iris %>% ggplot(aes(Sepal.Width)) + geom_density() - ggplotly()
