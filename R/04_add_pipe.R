@@ -1,14 +1,24 @@
 #' build a new pipe in one command
 #'
-#' @param new_pipe name
-#' @param new_body call, the variable body used in this call holds the initial
-#'   call
+#' The argument `new_body` will often be a `substitute` call, the variable `.`
+#' contains the output of the previous operation while the variable body
+#' contains the call that would be executed by a regular `%>%` pipe and modify
+#' it to get the new behavior.
+#'
+#' @param new_pipe A name
+#' @param new_body A call
 #'
 #' @return the operator is created and *magrittr*'s namespace is modified to
 #'   make the new operator compatible. NULL is returned.
 #' @export
 #'
 #' @examples
+#' # create a pipe that prints the dimensions before executing the relevant step
+#' add_pipe(`%dim1>%`, substitute({print(dim(.)); . <- b; cat("\n"); .}, list(b = body)))
+#' iris %dim1>% head(2)
+#' # create a pipe that prints the dimensions after executing the relevant step
+#' add_pipe(`%dim2>%`, substitute({. <- b; print(dim(.)); cat("\n"); .}, list(b = body)))
+#' iris %dim2>% head(2)
 #' # if we wanted to recreate existing operators
 #' add_pipe(`%T2>%`, call("{", body, quote(.)))
 #' iris %T2>% {message("side effect")} %>% head(2)
@@ -18,6 +28,7 @@
 #' data.frame(a = c(1,-1)) %W2>% transform(a = sqrt(a))
 #' add_pipe(`%P2>%`, substitute({. <- print(b);cat("\n");.}, list(b = body)))
 #' iris %P2>% head(3) %>% head(2)
+
 add_pipe <- function(new_pipe, new_body){
   new_pipe_chr <- as.character(substitute(new_pipe))
   if (new_pipe_chr %in% protected_pipes)
