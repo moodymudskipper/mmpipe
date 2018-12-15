@@ -5,6 +5,7 @@
 #'
 #' \describe{
 #'   \item{\%W>\%}{silence warnings}
+#'   \item{\%strict>\%}{fail on warning}
 #'   \item{\%V>\%}{uses \code{View()} on the output}
 #'   \item{\%L>\%}{logs the relevant call to the console}
 #'   \item{\%P>\%}{uses \code{print()} on the output}
@@ -68,3 +69,9 @@ NULL
 #' @rdname pipeops
 #' @export
 `%C>%` <- magrittr::`%>%`
+
+#' @rdname pipeops
+#' @export
+`%strict>%` <- magrittr::`%>%`
+
+
