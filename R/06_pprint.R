@@ -18,9 +18,7 @@
 #' pprint(~rename_all(.[1:2],toupper)) %>%
 #' pprint(dim)
 pprint <- function(.data,.fun,...){
-  if(!requireNamespace("purrr"))
-    stop("package purrr must be installed to use `pprint`")
-  .fun <- purrr::as_mapper(.fun)
+  .fun <- rlang::as_function(.fun)
   print(.fun(.data,...))
   invisible(.data)
 }

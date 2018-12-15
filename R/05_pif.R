@@ -35,17 +35,14 @@
 #' iris %>% pif(TRUE, dim,  warning("this will be evaluated"))
 #'  iris %>% pif(TRUE, dim, ~warning("this won't be evaluated"))
 pif <- function(x, p, true, false = identity){
-  if (!requireNamespace("purrr"))
-    stop("Package 'purrr' needs to be installed to use function 'pif'")
-
   if (inherits(p,     "formula"))
-    p     <- purrr::as_mapper(
+    p     <- rlang::as_function(
       if (!is.list(x)) p else update(p,~with(...,.)))
   if (inherits(true,  "formula"))
-    true  <- purrr::as_mapper(
+    true  <- rlang::as_function(
       if (!is.list(x)) true else update(true,~with(...,.)))
   if (inherits(false, "formula"))
-    false <- purrr::as_mapper(
+    false <- rlang::as_function(
       if (!is.list(x)) false else update(false,~with(...,.)))
 
   if ( (is.function(p) && p(x)) || (!is.function(p) && p)) {
