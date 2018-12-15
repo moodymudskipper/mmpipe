@@ -3,7 +3,7 @@
 #' \code{pprint} makes it easy to print information about the pipe chain's status.
 #'
 #' @param .data An object
-#' @param .fun A function to apply on \code{.data} so the output can be printed,
+#' @param .fun An expression or a function to apply on \code{.data} so the output can be printed,
 #'   supports formula notation through \code{purrr::as_mapper}.
 #' @param ... Additional parameters passed to .fun
 #'
@@ -12,13 +12,16 @@
 #' @examples
 #' iris %>%
 #' pprint(~"hello")           %>%
+#' pprint("hi")               %>% # simple expressions work as well
 #' head(2)                    %>%
 #' transform(Species = NULL)  %>%
 #' pprint(rowSums,na.rm=TRUE) %>%
-#' pprint(~rename_all(.[1:2],toupper)) %>%
+#' pprint(~dplyr::rename_all(.[1:2],toupper)) %>%
 #' pprint(dim)
 pprint <- function(.data,.fun,...){
-  .fun <- rlang::as_function(.fun)
-  print(.fun(.data,...))
+  if (inherits(.fun, "formula"))
+    .fun <- rlang::as_function(.fun)
+  if (is.function(.fun)) .fun <- .fun(.data,...)
+  print(.fun)
   invisible(.data)
 }
