@@ -160,6 +160,7 @@ iris %>% pif(TRUE, dim, ~warning("this won't be evaluated"))
 ## print info on intermediate steps with `pprint`
 
 ```{r}
+library(ggplot2)
 iris %>%
   pprint(~"hello")           %>%
   head(2)                    %>%

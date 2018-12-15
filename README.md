@@ -4,7 +4,7 @@ mmpipe
 
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
-This package proposes new pipe operators, a function to define custom operators easily, 2 other pipe friendly functions for conditional steps or printing and a `-.gg` methods which makes `-` an alias for `%>%` when used on a ggplot object.
+This package proposes new pipe operators, a function to define custom operators easily, 2 other pipe friendly functions for conditional steps or printing.
 
 -   **%W&gt;%** : silence **w**arnings
 -   **%V&gt;%** : uses `View()` on the output
@@ -28,6 +28,7 @@ When we attach `mmpipe` the functions `magrittr:::is_pipe` and `magrittr:::wrap_
 
 ``` r
 library(mmpipe)
+#> Warning: S3 method '-.gg' was declared in NAMESPACE but not found
 #> Warning: changing locked binding for 'is_pipe' in 'magrittr' whilst loading
 #> 'mmpipe'
 #> Warning: changing locked binding for 'wrap_function' in 'magrittr' whilst
@@ -195,15 +196,6 @@ See `magrittr:::wrap_function`'s code for a better understanding.
 
 See also functions `rm_pipe` and `list_pipes`.
 
-spare parenthesis by piping ggplot objects with `-`
----------------------------------------------------
-
-``` r
-library(ggplot2)
-library(plotly,quietly = TRUE, warn.conflicts = FALSE)
-iris %>% ggplot(aes(Sepal.Width)) + geom_density() - ggplotly()
-```
-
 easy conditional steps with `pif`
 ---------------------------------
 
@@ -245,6 +237,7 @@ print info on intermediate steps with `pprint`
 ----------------------------------------------
 
 ``` r
+library(ggplot2)
 iris %>%
   pprint(~"hello")           %>%
   head(2)                    %>%

@@ -170,3 +170,14 @@ iris %>%
   pprint(~setNames(.[1:2],toupper(names(.[1:2])))) %>%
   pprint(dim)
 ```
+
+Can be used to plot in the middle of a chain too
+
+```{r}
+library(ggplot2)
+iris %>%
+  pprint(~"hello") %>%
+  head(60)         %>%
+  pprint(~ggplot(., aes(Species)) + geom_bar()) %>%
+  head(2)
+```
