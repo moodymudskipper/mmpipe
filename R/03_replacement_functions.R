@@ -6,8 +6,7 @@ new_is_pipe <- function(pipe)
     identical(pipe, quote(`%W>%`)) || identical(pipe, quote(`%P>%`)) ||
     identical(pipe, quote(`%V>%`)) || identical(pipe, quote(`%L>%`)) ||
     identical(pipe, quote(`%D>%`)) || identical(pipe, quote(`%S>%`)) ||
-    identical(pipe, quote(`%G>%`)) || identical(pipe, quote(`%C>%`)) ||
-    identical(pipe, quote(`-.gg`))
+    identical(pipe, quote(`%G>%`)) || identical(pipe, quote(`%C>%`))
 }
 
 # function defined to replace original magrittr:::wrap_function

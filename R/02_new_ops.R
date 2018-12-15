@@ -68,12 +68,3 @@ NULL
 #' @rdname pipeops
 #' @export
 `%C>%` <- magrittr::`%>%`
-
-#' Pipe ggplot objects using `-`
-#'
-#' This is a pure alias for `%>%` but it has a different operator precedence
-#' which makes it convenient when you want to pipe a ggplot chain into a function
-#' without using parenthesis around the call.
-#'
-#' @export
-`-.gg` <- magrittr::`%>%`

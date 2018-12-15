@@ -21,9 +21,7 @@ knitr::opts_chunk$set(
 Install with `devtools::install_gh("moodymudskipper/mmpipe")`
 
 This package proposes new pipe operators, a function to define custom operators
-easily, 2 other pipe friendly functions for conditional steps or printing and
-a `-.gg` methods which makes `-` an alias for `%>%` when used on a ggplot
-object.
+easily, 2 other pipe friendly functions for conditional steps or printing.
 
 * **%W>%** : silence **w**arnings
 * **%V>%** : uses `View()` on the output
@@ -131,14 +129,6 @@ Redefining `%W2>%` as `%W>%` twin :
 See `magrittr:::wrap_function`'s code for a better understanding.
 
 See also functions `rm_pipe` and `list_pipes`.
-
-## spare parenthesis by piping ggplot objects with `-`
-
-```{r}
-library(ggplot2)
-library(plotly,quietly = TRUE, warn.conflicts = FALSE)
-iris %>% ggplot(aes(Sepal.Width)) + geom_density() - ggplotly()
-```
 
 ## easy conditional steps with `pif`
 
