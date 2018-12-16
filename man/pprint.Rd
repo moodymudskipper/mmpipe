@@ -9,7 +9,7 @@ pprint(.data, .fun, ...)
 \arguments{
 \item{.data}{An object}
 
-\item{.fun}{A function to apply on \code{.data} so the output can be printed,
+\item{.fun}{An expression or a function to apply on \code{.data} so the output can be printed,
 supports formula notation through \code{purrr::as_mapper}.}
 
 \item{...}{Additional parameters passed to .fun}
@@ -20,9 +20,10 @@ supports formula notation through \code{purrr::as_mapper}.}
 \examples{
 iris \%>\%
 pprint(~"hello")           \%>\%
+pprint("hi")               \%>\% # simple expressions work as well
 head(2)                    \%>\%
 transform(Species = NULL)  \%>\%
 pprint(rowSums,na.rm=TRUE) \%>\%
-pprint(~rename_all(.[1:2],toupper)) \%>\%
+pprint(~dplyr::rename_all(.[1:2],toupper)) \%>\%
 pprint(dim)
 }

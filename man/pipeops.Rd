@@ -10,6 +10,7 @@
 \alias{\%V>\%}
 \alias{\%L>\%}
 \alias{\%C>\%}
+\alias{\%strict>\%}
 \title{Pipe operators to enhance magrittr}
 \usage{
 lhs \%W>\% rhs
@@ -27,6 +28,8 @@ lhs \%V>\% rhs
 lhs \%L>\% rhs
 
 lhs \%C>\% rhs
+
+lhs \%strict>\% rhs
 }
 \arguments{
 \item{lhs}{A value or the magrittr placeholder.}
@@ -40,6 +43,7 @@ additional side effects.
 \details{
 \describe{
   \item{\%W>\%}{silence warnings}
+  \item{\%strict>\%}{fail on warning}
   \item{\%V>\%}{uses \code{View()} on the output}
   \item{\%L>\%}{logs the relevant call to the console}
   \item{\%P>\%}{uses \code{print()} on the output}

@@ -7,19 +7,27 @@
 add_pipe(new_pipe, new_body)
 }
 \arguments{
-\item{new_pipe}{name}
+\item{new_pipe}{A name}
 
-\item{new_body}{call, the variable body used in this call holds the initial
-call}
+\item{new_body}{A call}
 }
 \value{
 the operator is created and *magrittr*'s namespace is modified to
   make the new operator compatible. NULL is returned.
 }
 \description{
-build a new pipe in one command
+The argument `new_body` will often be a `substitute` call, the variable `.`
+contains the output of the previous operation while the variable body
+contains the call that would be executed by a regular `%>%` pipe and modify
+it to get the new behavior.
 }
 \examples{
+# create a pipe that prints the dimensions before executing the relevant step
+add_pipe(`\%dim1>\%`, substitute({print(dim(.)); . <- b; cat("\\n"); .}, list(b = body)))
+iris \%dim1>\% head(2)
+# create a pipe that prints the dimensions after executing the relevant step
+add_pipe(`\%dim2>\%`, substitute({. <- b; print(dim(.)); cat("\\n"); .}, list(b = body)))
+iris \%dim2>\% head(2)
 # if we wanted to recreate existing operators
 add_pipe(`\%T2>\%`, call("{", body, quote(.)))
 iris \%T2>\% {message("side effect")} \%>\% head(2)

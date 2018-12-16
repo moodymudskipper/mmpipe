@@ -41,7 +41,7 @@ iris \%>\% pif(is.data.frame, dim, nrow)
 # using formulas
 iris \%>\% pif(~is.numeric(Species), ~"numeric :)",~paste(class(Species)[1],":("))
 # using expressions
-iris \%>\% pif(nrow(iris) > 2, head(iris,2))
+iris \%>\% pif(nrow(.) > 2, head(.,2))
 # careful with expressions
 iris \%>\% pif(TRUE, dim,  warning("this will be evaluated"))
  iris \%>\% pif(TRUE, dim, ~warning("this won't be evaluated"))
