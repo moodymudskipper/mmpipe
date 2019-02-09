@@ -17,7 +17,6 @@ This package proposes new pipe operators, a function to define custom operators 
 -   **add\_pipe** : build custom pipe
 -   **pif** : conditional steps
 -   **pprint** : pipe friendly printing
--   **-.gg** : Just like `%>%` but the different operator precedence makes it sometimes more convenient.
 
 `magrittr`'s operators are also exported so they can be used without attaching alias functions.
 
